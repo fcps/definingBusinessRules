@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title></title>
+    <title>Defining Business Rules</title>
 
     <link rel="stylesheet" href="../css/reveal.css">
     <link rel="stylesheet" href="../css/theme/white.css">
@@ -25,32 +25,160 @@
 <div class="reveal">
     <div class="slides">
         <section>
-            <h1></h1>
-            <h2></h2>
+            <h1>Defining Business Rules</h1>
+            <h2>How to create unambiguous definitions</h2>
         </section>
         <section>
+            <h2>Goals</h2>
+            <ul>
+                <li>Reinforce understanding of <a href="https://fcps.github.io/dataGovernance/businessRules101/index.html#/4" target="_blank">MECE criterion</a></li>
+                <li>Learn how to use decision trees to develop and communicate rules</li>
+            </ul>
+        </section>
+        <section>
+            <h2>MECE Criterion</h2>
             <section>
-
+                <ul>
+                    <li>Mutually Exclusive</li>
+                        <ul>
+                            <li>Everything in a computer is black and white (or 0/1), so rules must be as well.</li>
+                            <li>For each rule there needs to be a consistent way to identify a single valid value.</li>
+                            <li><strong>It is not a rule if any records can fall into multiple categories simultaneously.</strong></li>
+                        </ul>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>As an example, can a student have free and reduced price lunch status simultaneously?</li>
+                        <li>If the answer is no, the condition is mutually exclusive.</li>
+                        <li>If the answer is yes, you would need additional branches/nodes in the tree.</li>
+                    </ul>
+                </aside>
             </section>
-
-        </section>
-        <section>
             <section>
-
+                <ul>
+                    <li>Completely Exhaustive</li>
+                        <ul>
+                            <li>Every possible outcome must be accounted for.</li>
+                            <li>This is the time where <em>"What if"</em> scenarios are extraordinarily valuable and helpful.</li>
+                            <li><strong>If there is a category/value that is not accounted for it is not a rule</strong></li>
+                        </ul>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>There are three lunch statuses: Free, Reduced, and Full Price.</li>
+                        <li>A student can only be in one of those three categories.</li>
+                        <li>Because some DB developers want to take short cuts that degrade data quality, sometimes there are additional unmentioned rules.</li>
+                        <li>For example, if there is no lunch status for a student it implies that they pay full price for their lunch.</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <ul>
+                    <li><strong>The MECE criterion is the <em>only</em> standard.</strong></li>
+                    <li><strong>Data managers do not define business rules.</strong></li>
+                    <li>Data managers can and will <em>support you</em> as <strong>Data Owners and Data Stewards</strong> to define effective business rules</li>
+                    <li>Using this framework reduces confusion and improves data quality.</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>Emphasize role of data stewards and owners</li>
+                        <li>It is difficult to be confused when there is a well defined bright line test for everything.</li>
+                        <li>Data quality improves when it is clear what to enter and how to enter it at all times and under all conditions.</li>
+                    </ul>
+                </aside>
             </section>
         </section>
         <section>
+            <h2>Pictures make rules easier to define and communicate</h2>
             <section>
-
+                <img src="img/mapBusinessRule.svg">
+                <aside class="notes">
+                    <ul>
+                        <li>This shows the business rule for creating a new session ID for NWEA Map's Reporting Platform</li>
+                        <li>The process starts when a user logs in to their system.</li>
+                        <li>The login creates a new session ID to identify all the things that happen in that session.</li>
+                        <li>Then we ask whether or not the user has logged out</li>
+                        <li>If they have logged out that would indicate the end of the session and the last record with that session ID</li>
+                        <li>If they haven't logged out, we ask if they've been active within the past 30 minutes.</li>
+                        <li>If they have not been active in the last 30 minutes the NWEA platform logs the user out and ends the session</li>
+                        <li>If they have been active in the last 30 minutes, we go back to checking if they've logged out.</li>
+                        <li>No report views can be attributed to multiple session IDs for a single user and there are no cases that aren't covered.  Either the user logs out, or the system logs them out after 30 minutes of no activity</li>
+                    </ul>
+                </aside>
             </section>
-
+            <section>
+                <br><br>
+                <ul>
+                    <li>DRA has selected some free software for you to create your very own business rules</li>
+                    <li>For now, go to: <a href="https://www.yworks.com/yed-live/">yEd Live</a> to try a cloud based version of the tool.</li>
+                    <li>To install on your computer later go to: <a href="http://www.yworks.com/downloads#yEd">yWorks</a></li>
+                    <li>Aside from supporting a lot of different diagram types, we can export higher quality files that are easy for web browsers to handle.</li>
+                </ul>
+            </section>
+            <section>
+                <img src="img/flowchartObjects.svg">
+                <aside class="notes">
+                    <ul>
+                        <li>These are the basic objects people will need to be familiar with and what they mean</li>
+                        <li>Decisions should be a question that has a defined set of answers (preferably of the yes/no variety)</li>
+                        <li>The Database object only needs to be used when you need to clarify if the source of record comes from multiple locations (e.g., IC and MUNIS)</li>
+                        <li>A datum is what we are after....it is the goal of all of this.  To define individual values, categories, and/or ranges that make up our data.</li>
+                        <li>The terminator is there because...well it's a terminator.</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <img src="img/entityObjects.svg">
+                <aside class="notes">
+                    <ul>
+                        <li>Sometimes the business rules get a bit more complex</li>
+                        <li>In those cases, we may need to define relationships between objects</li>
+                        <li>Objects are things</li>
+                        <li>Objects have attributes or properties</li>
+                        <li>A person object - for example - would have things like name, date of birth, location of birth, etc... things that are immutable about the object (e.g., don't change)</li>
+                        <li>For attributes/properties that do change, we use another object to store those data and define a relationship between them.</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>Time for a demo...</h2>
+                <aside class="notes">
+                    <ul>
+                        <li>Open yEd and work through how I created the MAP diagram</li>
+                        <li>Next get a volunteer to work through their business rule</li>
+                    </ul>
+                </aside>
+            </section>
         </section>
         <section>
+            <h2>Next meeting</h2>
             <section>
-
+                <ul>
+                    <li>We'll provide as detailed a list as possible of data elements, as well as our recommendations for data owners</li>
+                    <li>We will also work with the IC and MUNIS teams to identify data managers for those same data elements</li>
+                    <li>We'll focus on making sure all data elements have an identified owner and can review any of the previous talks</li>
+                    <li><strong>Data owners need to be prepared to begin identifying your data stewards shortly thereafter.</strong></li>
+                </ul>
             </section>
         </section>
     </div>
 </div>
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        history: true,
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            { src: '../plugin/markdown/marked.js' },
+            { src: '../plugin/markdown/markdown.js' },
+            { src: '../plugin/notes/notes.js', async: true },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+    });
+</script>
 </body>
 </html>
